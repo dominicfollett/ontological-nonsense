@@ -8,7 +8,10 @@ LIBS = -lpthread
 parser.o: parser.c
 	$(CC) -c $^ $(CFLAGS)
 
-ontology_main: parser.o
+ontology.o: ontology.c
+	$(CC) -c $^ $(CFLAGS)
+
+ontology_main: parser.o ontology.o
 	$(CC) -o $@ $(CFLAGS) $^ $(LIBS)
 
 #### Cleanup ####
