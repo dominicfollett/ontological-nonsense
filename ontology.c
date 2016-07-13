@@ -63,6 +63,7 @@ int main(int argc, char* argv[]){
 
   for(index=0; index < n_topics; index++) {
     questions_hash[index] = (struct question *) malloc(sizeof(struct question));
+    questions_hash[index]->topic = "";
   }
 
   get_line(NULL);
@@ -73,32 +74,28 @@ int main(int argc, char* argv[]){
 
   while(m_questions > 0) {
     get_line(NULL);
-    char * token = strtok(line, " ");
+    char * token = strtok(line, ":");
     line = NULL;
-    token[strlen(token)-1] = 0;
-    //printf("%s\n", token);
-    int i = (int) hash(token, n_topics);
-    printf("%i\n", i);
-    struct question * q_tmp = questions_hash[i];
 
+    int i = (int) hash(token, n_topics);
+    struct question * q_tmp = questions_hash[i];
     while(1) {
-      if (strcmp(q_tmp->topic, token) == 0) {
-        // do nothing for now
-      }else{
-        if(!q_tmp->child){
-          q_tmp = (struct question *) malloc(sizeof(struct question));
-          copy_string(token, &(q_tmp->topic));
-          printf("%s\n", q_tmp->topic);
-          // Insert dawg
+        if (strcmp(q_tmp->topic, token) == 0) {
+          // insert to dawg
           break;
         }else{
-          q_tmp = q_tmp->child;
+          if(!q_tmp->child){
+            q_tmp->child = (struct question *) malloc(sizeof(struct question));
+            q_tmp = q_tmp->child;
+            copy_string(token, &(q_tmp->topic));
+            printf("%s\n", strtok(line, ":"));
+            // Insert dawg
+            break;
+          }else{
+            q_tmp = q_tmp->child;
+          }
         }
-
-      }
-
     }
-
     m_questions--;
   }
 
@@ -107,7 +104,6 @@ int main(int argc, char* argv[]){
 
   while(k_queries > 0 ) {
     get_line(NULL);
-    printf("%s\n", line);
     k_queries--;
   }
 
