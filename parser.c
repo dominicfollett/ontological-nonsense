@@ -61,7 +61,6 @@ void get_sub_topics_list(struct sub_topics_list ** list_index, char *topics, cha
     }
 
     while ((token = strtok(NULL, " ")) != NULL) {
-      // Exit if p_to_close == 0
       switch(*token) {
         case '(' :
           p_to_close+=1;

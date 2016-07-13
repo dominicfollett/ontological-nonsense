@@ -1,11 +1,16 @@
 36
 Animals ( Reptiles Birds ( Eagles Pigeons Crows Eags Pig Cow ) Dogs ( Cane Corso Dachshund Dalmatian Dandie Dinmont Terrier English Cocker Spaniel Foxhound Setter Field Finnish Lapphund Spitz German Pinscher ) Amphibians ( Frogs ( Small Large Poisonous ) Newts ) Snakes ( Dangernoodle ) )
-5
+10
 Reptiles: Why are many reptiles green?
 Birds: How do birds fly?
 Eagles: How endangered are eagles?
 Pigeons: Where in the world are pigeons most densely populated?
 Eagles: Where do most eagles live?
+Dandie: Why are many reptiles red?
+Birds: How do birds flee?
+Corso: How endangered is an eagle?
+Pigeons: Where in the world are pigeons most densely chinese?
+Dogs: Where do most eagles sleep?
 4
 Eagles How en
 Birds Where
