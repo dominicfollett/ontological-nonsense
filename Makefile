@@ -3,8 +3,9 @@ CFLAGS = -Wall -g
 
 LIBS = -lpthread
 
+question.o: question.c
+	$(CC) -c $^ $(CFLAGS)
 
-#### RPC Client Part ####
 dawg.o: dawg.c
 	$(CC) -c $^ $(CFLAGS)
 
@@ -14,7 +15,7 @@ parser.o: parser.c
 ontology.o: ontology.c
 	$(CC) -c $^ $(CFLAGS)
 
-ontology_main: parser.o ontology.o dawg.o
+ontology_main: parser.o ontology.o dawg.o question.o
 	$(CC) -o $@ $(CFLAGS) $^ $(LIBS)
 
 #### Cleanup ####

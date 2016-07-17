@@ -46,7 +46,7 @@ void copy_string(char * src, char ** dest){
   memcpy(*dest, src, length + 1);
 }
 
-void get_sub_topics_list(struct sub_topics_list ** list_index, char *topics, char * topic){
+void parser_get_sub_topics_list(struct sub_topics_list ** list_index, char *topics, char * topic){
   char *subtree;
   if((subtree = strstr(topics, topic)) != NULL) {
     char * token;

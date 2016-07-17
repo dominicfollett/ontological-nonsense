@@ -4,16 +4,13 @@
 #include <pthread.h>
 #include <string.h>
 #include "parser.h"
+#include "question.h"
+#include "dawg.h"
 
 FILE * file_handle = NULL;
 char * line = NULL;
 size_t len  = 0;
 
-struct question {
-  struct question * child;
-  char * topic;
-  // This needs to be the dawg
-};
 
 int get_line(char *workload_path){
   if (!file_handle) {
@@ -32,7 +29,7 @@ int get_line(char *workload_path){
   }
 }
 
-unsigned long hash(unsigned char *str, unsigned long modulo)
+unsigned long hash(char *str, unsigned long modulo)
 {
     unsigned long hash = 5381;
     int c;
@@ -45,7 +42,7 @@ unsigned long hash(unsigned char *str, unsigned long modulo)
 
 int main(int argc, char* argv[]){
   char * ontology;
-  int n_topics, m_questions, k_queries, index;
+  int n_topics, m_questions, k_queries;
   struct sub_topics_list * list;
   struct question ** questions_hash;
 
@@ -59,12 +56,8 @@ int main(int argc, char* argv[]){
   get_line(argv[1]);
   n_topics = atoi(line);
 
-  questions_hash = malloc(n_topics * sizeof(struct question *));
-
-  for(index=0; index < n_topics; index++) {
-    questions_hash[index] = (struct question *) malloc(sizeof(struct question));
-    questions_hash[index]->topic = "";
-  }
+  /*own file, and init method */
+  questions_hash = question_init(n_topics);
 
   get_line(NULL);
   copy_string(line, &ontology);
@@ -81,8 +74,8 @@ int main(int argc, char* argv[]){
     struct question * q_tmp = questions_hash[i];
     while(1) {
         if (strcmp(q_tmp->topic, token) == 0) {
-          // insert to dawg
-          
+          // create and or insert to dawg
+
           break;
         }else{
           if(!q_tmp->child){
@@ -90,7 +83,7 @@ int main(int argc, char* argv[]){
             q_tmp = q_tmp->child;
             copy_string(token, &(q_tmp->topic));
             printf("%s\n", strtok(line, ":"));
-            // Insert dawg
+            // create and or insert dawg
             break;
           }else{
             q_tmp = q_tmp->child;
@@ -111,8 +104,8 @@ int main(int argc, char* argv[]){
   //struct timespec tstart={0,0}, tend={0,0};
   //clock_gettime(CLOCK_MONOTONIC, &tstart);
 
-  get_sub_topics_list(&list, ontology, "Birds");
-  get_sub_topics_list(&list, ontology, "Dogs");
+  parser_get_sub_topics_list(&list, ontology, "Birds");
+  parser_get_sub_topics_list(&list, ontology, "Dogs");
 
   //clock_gettime(CLOCK_MONOTONIC, &tend);
   //printf("some_long_computation took about %.5f seconds\n",
