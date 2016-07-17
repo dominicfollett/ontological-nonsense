@@ -82,6 +82,7 @@ int main(int argc, char* argv[]){
     while(1) {
         if (strcmp(q_tmp->topic, token) == 0) {
           // insert to dawg
+          
           break;
         }else{
           if(!q_tmp->child){
@@ -111,7 +112,6 @@ int main(int argc, char* argv[]){
   //clock_gettime(CLOCK_MONOTONIC, &tstart);
 
   get_sub_topics_list(&list, ontology, "Birds");
-
   get_sub_topics_list(&list, ontology, "Dogs");
 
   //clock_gettime(CLOCK_MONOTONIC, &tend);
