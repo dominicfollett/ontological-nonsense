@@ -14,60 +14,60 @@ void dawg_bury(struct dawg ** good_dawg, char * question) {
   // Traverse the dawg
 }
 
-char * dawg_index(char * letter) {
+struct dawg * dawg_index(char * letter, struct dawg ** litter) {
   switch (*letter) {
     case 'a' :
-      return alphabet[0];
+      return litter[0];
     case 'b' :
-      return alphabet[1];
+      return litter[1];
     case 'c' :
-      return alphabet[2];
+      return litter[2];
     case 'd' :
-      return alphabet[3];
+      return litter[3];
     case 'e' :
-      return alphabet[4];
+      return litter[4];
     case 'f' :
-      return alphabet[5];
+      return litter[5];
     case 'g' :
-      return alphabet[6];
+      return litter[6];
     case 'h' :
-      return alphabet[7];
+      return litter[7];
     case 'i' :
-      return alphabet[8];
+      return litter[8];
     case 'j' :
-      return alphabet[9];
+      return litter[9];
     case 'k' :
-      return alphabet[10];
+      return litter[10];
     case 'l' :
-      return alphabet[11];
+      return litter[11];
     case 'm' :
-      return alphabet[12];
+      return litter[12];
     case 'n' :
-      return alphabet[13];
+      return litter[13];
     case 'o' :
-      return alphabet[14];
+      return litter[14];
     case 'p' :
-      return alphabet[15];
+      return litter[15];
     case 'q' :
-      return alphabet[16];
+      return litter[16];
     case 'r' :
-      return alphabet[17];
+      return litter[17];
     case 's' :
-      return alphabet[18];
+      return litter[18];
     case 't' :
-      return alphabet[19];
+      return litter[19];
     case 'u' :
-      return alphabet[20];
+      return litter[20];
     case 'v' :
-      return alphabet[21];
+      return litter[21];
     case 'w' :
-      return alphabet[22];
+      return litter[22];
     case 'x' :
-      return alphabet[23];
+      return litter[23];
     case 'y' :
-      return alphabet[24];
+      return litter[24];
     case 'z' :
-      return alphabet[25];
+      return litter[25];
     default :
       return NULL;
   }

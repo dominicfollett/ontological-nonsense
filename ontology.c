@@ -5,7 +5,6 @@
 #include <string.h>
 #include "parser.h"
 #include "question.h"
-#include "dawg.h"
 
 FILE * file_handle = NULL;
 char * line = NULL;
@@ -29,17 +28,6 @@ int get_line(char *workload_path){
   }
 }
 
-unsigned long hash(char *str, unsigned long modulo)
-{
-    unsigned long hash = 5381;
-    int c;
-
-    while ((c = *str++))
-        hash = ((hash << 5) + hash) + c; /* hash * 33 + c */
-
-    return hash % modulo;
-}
-
 int main(int argc, char* argv[]){
   char * ontology;
   int n_topics, m_questions, k_queries;
@@ -56,7 +44,6 @@ int main(int argc, char* argv[]){
   get_line(argv[1]);
   n_topics = atoi(line);
 
-  /*own file, and init method */
   questions_hash = question_init(n_topics);
 
   get_line(NULL);
@@ -65,31 +52,14 @@ int main(int argc, char* argv[]){
   get_line(NULL);
   m_questions = atoi(line);
 
+  /* Insert questions */
   while(m_questions > 0) {
     get_line(NULL);
     char * token = strtok(line, ":");
     line = NULL;
 
-    int i = (int) hash(token, n_topics);
-    struct question * q_tmp = questions_hash[i];
-    while(1) {
-        if (strcmp(q_tmp->topic, token) == 0) {
-          // create and or insert to dawg
+    question_insert(questions_hash, token, n_topics, line);
 
-          break;
-        }else{
-          if(!q_tmp->child){
-            q_tmp->child = (struct question *) malloc(sizeof(struct question));
-            q_tmp = q_tmp->child;
-            copy_string(token, &(q_tmp->topic));
-            printf("%s\n", strtok(line, ":"));
-            // create and or insert dawg
-            break;
-          }else{
-            q_tmp = q_tmp->child;
-          }
-        }
-    }
     m_questions--;
   }
 
@@ -114,7 +84,7 @@ int main(int argc, char* argv[]){
 
   free(line);
   parser_destroy(&list);
-
+  question_destroy(questions_hash, n_topics);
   free(ontology);
   fclose(file_handle);
   return 0;

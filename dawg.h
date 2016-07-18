@@ -4,11 +4,9 @@
 
 struct dawg {
   char * letter;
-  struct dawg * children[26];
+  struct dawg ** pups;
   unsigned int both_cases:1;
 };
-
-char * alphabet[26];
 
 /*
  * Creates and initialises a dawg element.
@@ -33,4 +31,4 @@ void dawg_demolish(struct dawg ** good_dawg);
 /*
  * Returns a pointer to the memory allocated letter
  */
-char * dawg_index(char * letter);
+struct dawg * dawg_index(char * letter, struct dawg ** litter);
