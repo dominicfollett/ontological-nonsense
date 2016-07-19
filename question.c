@@ -10,7 +10,8 @@ void question_destroy(struct question *** questions_hash, int m_questions) {
   while(m_questions >= 0 ){
     // free the dawg
     struct question * q_tmp = qh[m_questions];
-    recursive_free(&q_tmp);
+    if (q_tmp)
+      recursive_free(&q_tmp);
     m_questions--;
   }
   free(qh);
@@ -19,10 +20,9 @@ void question_destroy(struct question *** questions_hash, int m_questions) {
 void recursive_free(struct question ** q_tmp) {
   if ((*q_tmp)->child) {
     recursive_free(&((*q_tmp)->child));
-  }else{
-    free((*q_tmp)->topic);
-    free(*q_tmp);
   }
+  free((*q_tmp)->topic);
+  free(*q_tmp);
 }
 
 static unsigned long hash(char *str, unsigned long modulo)
@@ -38,13 +38,12 @@ static unsigned long hash(char *str, unsigned long modulo)
 
 struct question ** question_init(int m_questions) {
   struct question ** questions_hash =  malloc(m_questions * sizeof(struct question *));
-
-  m_questions--;
+  memset((void *) questions_hash, 0, m_questions * sizeof(struct question *));
+  /*m_questions--;
   while (m_questions >= 0) {
     questions_hash[m_questions] = (struct question *) malloc(sizeof(struct question));
-    memset((void *) questions_hash[m_questions], 0, sizeof(struct question));
     m_questions--;
-  }
+  }*/
 
   return questions_hash;
 }
@@ -54,20 +53,21 @@ void question_insert(struct question *** questions_hash, char * token, int m_que
 
   m_questions--;
   int i = (int) hash(token, m_questions);
-  struct question * q_tmp = qh[i];
+  struct question ** q_tmp = &qh[i];
 
   while(1) {
-    if (!q_tmp->topic){
-      copy_string(token, &(q_tmp->topic));
-      break;
-    }else if ((strcmp(q_tmp->topic, token) == 0) || (!q_tmp->child)) {
-      q_tmp->child = (struct question *) malloc(sizeof(struct question));
-      memset((void *) q_tmp->child, 0, sizeof(struct question));
-      q_tmp = q_tmp->child;
-      copy_string(token, &(q_tmp->topic));
-      break;
+    if(*q_tmp) {
+      if (strcmp((*q_tmp)->topic, token) == 0){
+        // insert dawg
+        break;
+      }else{
+        *q_tmp = (*q_tmp)->child;
+      }
     }else{
-      q_tmp = q_tmp->child;
+      *q_tmp = (struct question *) malloc(sizeof(struct question));
+      memset((void *) *q_tmp, 0, sizeof(struct question));
+      copy_string(token, &((*q_tmp)->topic));
+      break;
     }
   }
 }
