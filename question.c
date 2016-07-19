@@ -10,8 +10,9 @@ void question_destroy(struct question *** questions_hash, int m_questions) {
   while(m_questions >= 0 ){
     // free the dawg
     struct question * q_tmp = qh[m_questions];
-    if (q_tmp)
+    if (q_tmp) {
       recursive_free(&q_tmp);
+    }
     m_questions--;
   }
   free(qh);
@@ -39,12 +40,6 @@ static unsigned long hash(char *str, unsigned long modulo)
 struct question ** question_init(int m_questions) {
   struct question ** questions_hash =  malloc(m_questions * sizeof(struct question *));
   memset((void *) questions_hash, 0, m_questions * sizeof(struct question *));
-  /*m_questions--;
-  while (m_questions >= 0) {
-    questions_hash[m_questions] = (struct question *) malloc(sizeof(struct question));
-    m_questions--;
-  }*/
-
   return questions_hash;
 }
 
@@ -61,12 +56,13 @@ void question_insert(struct question *** questions_hash, char * token, int m_que
         // insert dawg
         break;
       }else{
-        *q_tmp = (*q_tmp)->child;
+        q_tmp = &((*q_tmp)->child);
       }
     }else{
       *q_tmp = (struct question *) malloc(sizeof(struct question));
       memset((void *) *q_tmp, 0, sizeof(struct question));
       copy_string(token, &((*q_tmp)->topic));
+      // insert dawg
       break;
     }
   }
