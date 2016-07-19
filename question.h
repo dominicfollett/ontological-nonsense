@@ -16,14 +16,14 @@
  */
 struct question ** question_init(int n_topics);
 
-void recursive_free(struct question * q_tmp);
+void recursive_free(struct question ** q_tmp);
 
 /*
  * Insert a question to the hash
  */
-void question_insert(struct question ** questions_hash, char * token, int n_topics, char * line);
+void question_insert(struct question *** questions_hash, char * token, int n_topics, char * line);
 
 /*
  * Clean up all allocated memory
  */
-void question_destroy(struct question ** questions_hash, int n_topics);
+void question_destroy(struct question *** questions_hash, int n_topics);

@@ -30,7 +30,7 @@ int get_line(char *workload_path){
 
 int main(int argc, char* argv[]){
   char * ontology;
-  int n_topics, m_questions, k_queries;
+  int m_questions, k_queries;
   struct sub_topics_list * list;
   struct question ** questions_hash;
 
@@ -40,11 +40,7 @@ int main(int argc, char* argv[]){
   }
 
   list = parser_init();
-
   get_line(argv[1]);
-  n_topics = atoi(line);
-
-  questions_hash = question_init(n_topics);
 
   get_line(NULL);
   copy_string(line, &ontology);
@@ -52,15 +48,15 @@ int main(int argc, char* argv[]){
   get_line(NULL);
   m_questions = atoi(line);
 
+  questions_hash = question_init(m_questions);
+  int i = m_questions;
+
   /* Insert questions */
-  while(m_questions > 0) {
+  while(i > 0) {
     get_line(NULL);
     char * token = strtok(line, ":");
-    line = NULL;
-
-    question_insert(questions_hash, token, n_topics, line);
-
-    m_questions--;
+    question_insert(&questions_hash, token, m_questions, strtok(NULL, ":"));
+    i--;
   }
 
   get_line(NULL);
@@ -84,7 +80,7 @@ int main(int argc, char* argv[]){
 
   free(line);
   parser_destroy(&list);
-  question_destroy(questions_hash, n_topics);
+  question_destroy(&questions_hash, m_questions);
   free(ontology);
   fclose(file_handle);
   return 0;
