@@ -8,7 +8,7 @@
    struct question * child;
    char * topic;
    // This needs to be the dawg -- dynamically sized array
-   struct dawg ** parent_dawg;
+   struct dawg ** dawg_array;
  };
 
 /*

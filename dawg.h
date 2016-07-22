@@ -13,10 +13,14 @@ struct dawg {
  */
 struct dawg * dawg_init();
 
+void init_alphabet();
+
+struct dawg ** dawg_init_array();
+
 /*
  * Insert string elements into dawg.
  */
-void dawg_bury(struct dawg ** good_dawg, char * question);
+void dawg_bury(struct dawg *** good_dawg, char * question);
 
 /*
  * Check if the given string exists.
@@ -31,4 +35,4 @@ void dawg_demolish(struct dawg ** good_dawg);
 /*
  * Returns a pointer to the memory allocated letter
  */
-struct dawg * dawg_index(char * letter, struct dawg ** litter);
+char * dawg_index(char * letter);

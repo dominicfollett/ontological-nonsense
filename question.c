@@ -23,6 +23,7 @@ void recursive_free(struct question ** q_tmp) {
     recursive_free(&((*q_tmp)->child));
   }
   free((*q_tmp)->topic);
+  free((*q_tmp)->dawg_array);
   free(*q_tmp);
 }
 
@@ -46,14 +47,13 @@ struct question ** question_init(int m_questions) {
 void question_insert(struct question *** questions_hash, char * token, int m_questions, char * line) {
   struct question ** qh = *questions_hash;
 
-  m_questions--;
-  int i = (int) hash(token, m_questions);
+  int i = (int) hash(token, m_questions--);
   struct question ** q_tmp = &qh[i];
 
   while(1) {
     if(*q_tmp) {
       if (strcmp((*q_tmp)->topic, token) == 0){
-        // insert dawg
+        dawg_bury(&((*q_tmp)->dawg_array), line);
         break;
       }else{
         q_tmp = &((*q_tmp)->child);
@@ -62,7 +62,8 @@ void question_insert(struct question *** questions_hash, char * token, int m_que
       *q_tmp = (struct question *) malloc(sizeof(struct question));
       memset((void *) *q_tmp, 0, sizeof(struct question));
       copy_string(token, &((*q_tmp)->topic));
-      // insert dawg
+      (*q_tmp)->dawg_array = dawg_init_array();
+      dawg_bury(&((*q_tmp)->dawg_array), line);
       break;
     }
   }
