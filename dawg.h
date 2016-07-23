@@ -20,7 +20,7 @@ struct dawg ** dawg_init_array();
 /*
  * Insert string elements into dawg.
  */
-void dawg_bury(struct dawg *** good_dawg, char * question);
+struct dawg ** dawg_bury(struct dawg ** good_dawg, char * question);
 
 /*
  * Check if the given string exists.

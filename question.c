@@ -53,7 +53,7 @@ void question_insert(struct question *** questions_hash, char * token, int m_que
   while(1) {
     if(*q_tmp) {
       if (strcmp((*q_tmp)->topic, token) == 0){
-        dawg_bury(&((*q_tmp)->dawg_array), line);
+        (*q_tmp)->dawg_array = dawg_bury((*q_tmp)->dawg_array, line);
         break;
       }else{
         q_tmp = &((*q_tmp)->child);
@@ -63,7 +63,7 @@ void question_insert(struct question *** questions_hash, char * token, int m_que
       memset((void *) *q_tmp, 0, sizeof(struct question));
       copy_string(token, &((*q_tmp)->topic));
       (*q_tmp)->dawg_array = dawg_init_array();
-      dawg_bury(&((*q_tmp)->dawg_array), line);
+      (*q_tmp)->dawg_array = dawg_bury((*q_tmp)->dawg_array, line);
       break;
     }
   }

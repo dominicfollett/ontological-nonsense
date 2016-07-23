@@ -25,23 +25,24 @@ void chop_letter(char ** word, char * c){
   }
 }
 
-void dawg_bury(struct dawg *** good_dawg, char * question) {
-  struct dawg ** dawg_array = *good_dawg;
+struct dawg ** dawg_bury(struct dawg ** dawg_array, char * question) {
+  //struct dawg ** dawg_array = *good_dawg;
   int i = -1;
   char c[] = "\0";
   chop_letter(&question, c);
 
   if((strcmp(question, "\0")) == 0 || (!dawg_index(c))) {
-    return;
+    return dawg_array;
   }
 
-  while(i++){
+  while(1){
     if((dawg_array[i]) && (strcmp(dawg_array[i]->letter,c) == 0) ){
-        // fine, get child dawg array
-      dawg_bury(&(dawg_array[i]->pups), question);
-      return;
+      printf("%s\n", dawg_array[i]->letter);
+      dawg_bury(dawg_array[i]->pups, question);
+      return dawg_array;
     }else{
       if (!dawg_array[i]) {
+
         dawg_array[i] = dawg_init();
         dawg_array[i]->letter = dawg_index(c);
         dawg_array[i]->pups = dawg_init_array();
@@ -52,14 +53,14 @@ void dawg_bury(struct dawg *** good_dawg, char * question) {
           perror("Error: ");
         }
 
-        printf("%s\n", dawg_index(c));
-
-        dawg_bury(&(dawg_array[i]->pups), question);
-        return;
+        dawg_array[i]->pups = dawg_bury(dawg_array[i]->pups, question);
+        // perhaps return the pointer of the newly allocated dawg_array
+        return dawg_array;
       }
-      return;
+      i++;
     }
   }
+  return dawg_array;
 }
 
 void alpha_check(int i, const char * c) {
