@@ -23,7 +23,7 @@ void recursive_free(struct question ** q_tmp) {
     recursive_free(&((*q_tmp)->child));
   }
   free((*q_tmp)->topic);
-  free((*q_tmp)->dawg_array);
+  //free((*q_tmp)->dawg_array);
   free(*q_tmp);
 }
 
