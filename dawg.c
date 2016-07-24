@@ -27,7 +27,7 @@ void chop_letter(char ** word, char * c){
 
 struct dawg ** dawg_bury(struct dawg ** dawg_array, char * question) {
   //struct dawg ** dawg_array = *good_dawg;
-  int i = -1;
+  int i = 0;
   char c[] = "\0";
   chop_letter(&question, c);
 
@@ -37,7 +37,6 @@ struct dawg ** dawg_bury(struct dawg ** dawg_array, char * question) {
 
   while(1){
     if((dawg_array[i]) && (strcmp(dawg_array[i]->letter,c) == 0) ){
-      printf("%s\n", dawg_array[i]->letter);
       dawg_bury(dawg_array[i]->pups, question);
       return dawg_array;
     }else{
@@ -48,11 +47,10 @@ struct dawg ** dawg_bury(struct dawg ** dawg_array, char * question) {
         dawg_array[i]->pups = dawg_init_array();
         dawg_array[i]->both_cases;
         // resize
-
         if(!(dawg_array = (struct dawg **) realloc((void *) dawg_array, (i+2) * sizeof(struct dawg *)))) {
           perror("Error: ");
         }
-
+        memset(dawg_array + i + 1, 0, sizeof(struct dawg *));
         dawg_array[i]->pups = dawg_bury(dawg_array[i]->pups, question);
         // perhaps return the pointer of the newly allocated dawg_array
         return dawg_array;
