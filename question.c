@@ -15,6 +15,7 @@ void question_destroy(struct question *** questions_hash, int m_questions) {
     }
     m_questions--;
   }
+  dawg_cleanup();
   free(qh);
 }
 
@@ -23,7 +24,8 @@ void recursive_free(struct question ** q_tmp) {
     recursive_free(&((*q_tmp)->child));
   }
   free((*q_tmp)->topic);
-  //free((*q_tmp)->dawg_array);
+  dawg_demolish((*q_tmp)->dawg_array);
+  free((*q_tmp)->dawg_array);
   free(*q_tmp);
 }
 

@@ -32,6 +32,8 @@ void dawg_fetch(struct dawg ** good_dawg);
  */
 void dawg_demolish(struct dawg ** good_dawg);
 
+void dawg_cleanup();
+
 /*
  * Returns a pointer to the memory allocated letter
  */

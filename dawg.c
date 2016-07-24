@@ -61,6 +61,28 @@ struct dawg ** dawg_bury(struct dawg ** dawg_array, char * question) {
   return dawg_array;
 }
 
+void dawg_demolish(struct dawg ** good_dawg) {
+  int i = 0;
+  while(1) {
+    if(good_dawg[i]) {
+      dawg_demolish(good_dawg[i]->pups);
+      free(good_dawg[i]->pups);
+      free(good_dawg[i]);
+    }else{
+      return;
+    }
+    i++;
+  }
+}
+
+void dawg_cleanup() {
+  int i = 0;
+  while(alphabet[i]) {
+    free(alphabet[i]);
+    i++;
+  }
+}
+
 void alpha_check(int i, const char * c) {
   if (!alphabet[i]){
     alphabet[i] = malloc(2*sizeof(char));
