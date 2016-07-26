@@ -3,7 +3,7 @@
 #include <string.h>
 #include "dawg.h"
 
-static char * alphabet[26];
+static char * alphabet[51];
 
 struct dawg * dawg_init() {
   struct dawg * dg = (struct dawg *) malloc(sizeof(struct dawg));
@@ -93,7 +93,7 @@ void dawg_demolish(struct dawg ** good_dawg) {
 }
 
 void dawg_cleanup() {
-  int i = 25;
+  int i = 50;
   while(i >=0 ) {
     if(alphabet[i]) {
       free(alphabet[i]);
