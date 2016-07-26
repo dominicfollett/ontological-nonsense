@@ -46,6 +46,27 @@ struct question ** question_init(int m_questions) {
   return questions_hash;
 }
 
+int question_count(struct question *** questions_hash, int m_questions, char * query, char * topic) {
+  struct question ** qh = *questions_hash;
+
+  int i = (int) hash(topic, m_questions--);
+  struct question ** q_tmp = &qh[i];
+
+  while(1) {
+    if(*q_tmp) {
+      if (strcmp((*q_tmp)->topic, topic) == 0){
+        return dawg_fetch((*q_tmp)->dawg_array, query);
+      }else{
+        q_tmp = &((*q_tmp)->child);
+      }
+    }else{
+      return 0;
+    }
+  }
+
+  return 0;
+}
+
 void question_insert(struct question *** questions_hash, char * token, int m_questions, char * line) {
   struct question ** qh = *questions_hash;
 

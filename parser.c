@@ -32,6 +32,7 @@ static void add_to_list(struct sub_topics_list ** list_index, char * token) {
   struct sub_topics_list * item = (struct sub_topics_list *) malloc(sizeof(struct sub_topics_list));
   item->topic = (char *) malloc(strlen(token) + 1);
   strcpy(item->topic, token);
+  item->topic_child = NULL;
   item->topic_parent = *list_index;
   (*list_index)->topic_child = item;
   *list_index = item;

@@ -62,16 +62,34 @@ int main(int argc, char* argv[]){
   get_line(NULL);
   k_queries = atoi(line);
 
-  while(k_queries > 0 ) {
-    get_line(NULL);
-    k_queries--;
-  }
-
   struct timespec tstart={0,0}, tend={0,0};
   clock_gettime(CLOCK_MONOTONIC, &tstart);
 
-  parser_get_sub_topics_list(&list, ontology, "Birds");
-  parser_get_sub_topics_list(&list, ontology, "Dogs");
+  while(k_queries > 0 ) {
+    get_line(NULL);
+    char * tmp_str = malloc(strlen(line) +1);
+    strcpy(tmp_str, line);
+    char * token = strtok(tmp_str, " ");
+
+    //line += strlen(tmp_str) +1;
+    parser_get_sub_topics_list(&list, ontology, token);
+    line+=strlen(token) +1;
+
+    struct sub_topics_list * tmp_list;
+    tmp_list = list;
+    int score = 0;
+
+    while (tmp_list->topic_parent) {
+      // search for provided string accross multiple topics.
+      score += question_count(&questions_hash, m_questions, line, tmp_list->topic);
+      tmp_list = tmp_list->topic_parent;
+    }
+
+    printf("%s %i\n", token, score);
+    line -= strlen(token) +1;
+    free(tmp_str);
+    k_queries--;
+  }
 
   clock_gettime(CLOCK_MONOTONIC, &tend);
   printf("some_long_computation took about %.5f seconds\n",

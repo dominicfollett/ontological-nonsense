@@ -23,6 +23,7 @@ void recursive_free(struct question ** q_tmp);
  */
 void question_insert(struct question *** questions_hash, char * token, int n_topics, char * line);
 
+int question_count(struct question *** questions_hash, int m_questions, char * query, char * topic);
 /*
  * Clean up all allocated memory
  */

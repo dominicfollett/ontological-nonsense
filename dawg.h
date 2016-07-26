@@ -5,7 +5,6 @@
 struct dawg {
   char * letter;
   struct dawg ** pups;
-  unsigned int both_cases:1;
 };
 
 /*
@@ -25,7 +24,7 @@ struct dawg ** dawg_bury(struct dawg ** good_dawg, char * question);
 /*
  * Check if the given string exists.
  */
-void dawg_fetch(struct dawg ** good_dawg);
+int dawg_fetch(struct dawg ** good_dawg, char * query);
 
 /*
  * Free all memory associated with this dawg.
