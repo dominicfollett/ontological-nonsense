@@ -28,18 +28,24 @@ void chop_letter(char ** word, char * c){
 int dawg_fetch(struct dawg ** good_dawg, char * query) {
   int i = 0;
   char c[] = "\0";
+
+  if (strcmp(query, "\n") == 0) {
+    return 1;
+  }
+
   chop_letter(&query, c);
 
   while(good_dawg[i]) {
-    if((good_dawg[i]) && (strcmp(good_dawg[i]->letter,c) == 0) ){
       if (strcmp(query, "\n") == 0) {
         return 1; // return the value stored at the node.
       }
-      return dawg_fetch(good_dawg[i]->pups, query);
+      if ((strcmp(good_dawg[i]->letter,c) == 0)) {
+        if (good_dawg[i]->pups) {
+          return dawg_fetch(good_dawg[i]->pups, query);
+        }
     }
     i++;
   }
-
   return 0;
 }
 
@@ -49,7 +55,7 @@ struct dawg ** dawg_bury(struct dawg ** dawg_array, char * question) {
   char c[] = "\0";
   chop_letter(&question, c);
 
-  if((strcmp(question, "\0")) == 0 || (!dawg_index(c))) {
+  if( ((strcmp(question, "\n")) == 0) || (!dawg_index(c))) {
     return dawg_array;
   }
 
@@ -64,10 +70,12 @@ struct dawg ** dawg_bury(struct dawg ** dawg_array, char * question) {
         dawg_array[i]->letter = dawg_index(c);
         dawg_array[i]->pups = dawg_init_array();
         // resize
-        if(!(dawg_array = (struct dawg **) realloc((void *) dawg_array, (i+2) * sizeof(struct dawg *)))) {
+
+        if(!(dawg_array = (struct dawg **) realloc((void *) dawg_array, (2+i) * sizeof(struct dawg *)))) {
           perror("Error: ");
         }
-        memset(dawg_array + i + 1, 0, sizeof(struct dawg *));
+        memset(&dawg_array[i + 1], 0, sizeof(struct dawg *));
+
         dawg_array[i]->pups = dawg_bury(dawg_array[i]->pups, question);
         // perhaps return the pointer of the newly allocated dawg_array
         return dawg_array;

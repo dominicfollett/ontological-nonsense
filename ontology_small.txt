@@ -1,0 +1,8 @@
+6
+Animals ( Reptiles Birds ( Eagles Pigeons Crows ) )
+2
+Birds: Ha
+Birds: Hb
+2
+Birds Ha
+Birds Hp

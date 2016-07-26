@@ -62,9 +62,6 @@ int main(int argc, char* argv[]){
   get_line(NULL);
   k_queries = atoi(line);
 
-  struct timespec tstart={0,0}, tend={0,0};
-  clock_gettime(CLOCK_MONOTONIC, &tstart);
-
   while(k_queries > 0 ) {
     get_line(NULL);
     char * tmp_str = malloc(strlen(line) +1);
@@ -90,6 +87,9 @@ int main(int argc, char* argv[]){
     free(tmp_str);
     k_queries--;
   }
+
+  struct timespec tstart={0,0}, tend={0,0};
+  clock_gettime(CLOCK_MONOTONIC, &tstart);
 
   clock_gettime(CLOCK_MONOTONIC, &tend);
   printf("some_long_computation took about %.5f seconds\n",
