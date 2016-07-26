@@ -29,11 +29,11 @@ int dawg_fetch(struct dawg ** good_dawg, char * query) {
   int i = 0;
   char c[] = "\0";
 
+  chop_letter(&query, c);
+
   if (strcmp(query, "\n") == 0) {
     return 1;
   }
-
-  chop_letter(&query, c);
 
   while(good_dawg[i]) {
       if (strcmp(query, "\n") == 0) {
@@ -53,18 +53,20 @@ struct dawg ** dawg_bury(struct dawg ** dawg_array, char * question) {
   //struct dawg ** dawg_array = *good_dawg;
   int i = 0;
   char c[] = "\0";
-  chop_letter(&question, c);
 
-  if( ((strcmp(question, "\n")) == 0) || (!dawg_index(c))) {
+  if (strcmp(question, "\n") == 0) {
     return dawg_array;
   }
+
+  chop_letter(&question, c);
 
   while(1){
     if((dawg_array[i]) && (strcmp(dawg_array[i]->letter,c) == 0) ){
       dawg_bury(dawg_array[i]->pups, question);
       return dawg_array;
     }else{
-      if (!dawg_array[i]) {
+
+      if (!dawg_array[i]) { // TODO need to check if the char exists as well
 
         dawg_array[i] = dawg_init();
         dawg_array[i]->letter = dawg_index(c);
