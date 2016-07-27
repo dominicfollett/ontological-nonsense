@@ -42,19 +42,6 @@ int dawg_fetch(struct dawg ** good_dawg, char * query) {
   }
   /* Here we have failed to match completely */
   return 0;
-
-  /*
-  if (strcmp(good_dawg[i]->letter,c) == 0) {
-    if (good_dawg[i]->pups && (strcmp(query, "\n") != 0)) {
-      return dawg_fetch(good_dawg[i]->pups, query);
-    }else if (strcmp(query, "\n") == 0) {
-      return 1;s
-    }
-  }else{
-    return 0;
-  }
-
-  */
 }
 
 struct dawg ** dawg_bury(struct dawg ** dawg_array, char * question) {
@@ -92,7 +79,7 @@ struct dawg ** dawg_bury(struct dawg ** dawg_array, char * question) {
           j--;
         }
         dg[i+1] = NULL;
-        dg[i]->pups = dawg_bury(dawg_array[i]->pups, question);
+        dg[i]->pups = dawg_bury(dg[i]->pups, question);
         /* perhaps return the pointer of the newly allocated dawg_array */
         return dg;
       }
@@ -104,16 +91,13 @@ struct dawg ** dawg_bury(struct dawg ** dawg_array, char * question) {
 
 void dawg_demolish(struct dawg ** good_dawg) {
   int i = 0;
-  while(1) {
-    if(good_dawg[i]) {
+  while(good_dawg[i]) {
       dawg_demolish(good_dawg[i]->pups);
       free(good_dawg[i]->pups);
       free(good_dawg[i]);
-    }else{
-      return;
+      i++;
     }
-    i++;
-  }
+    return;
 }
 
 void dawg_cleanup(void) {
