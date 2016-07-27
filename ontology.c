@@ -1,15 +1,15 @@
 #include <stdio.h>
 #include <stdlib.h>
-#include <getopt.h>
-#include <pthread.h>
 #include <string.h>
 #include "parser.h"
 #include "question.h"
 
+/* Prototype declaration */
+int get_line(char * workload_path);
+
 FILE * file_handle = NULL;
 char * line = NULL;
 size_t len  = 0;
-
 
 int get_line(char *workload_path){
   if (!file_handle) {
@@ -30,9 +30,14 @@ int get_line(char *workload_path){
 
 int main(int argc, char* argv[]){
   char * ontology;
-  int m_questions, k_queries;
+  int m_questions, k_queries, i, score;
   struct sub_topics_list * list;
   struct question ** questions_hash;
+  struct sub_topics_list * tmp_list;
+  char * token;
+  char * tmp_str;
+
+  printf("%i == \n", argc);
 
   if (argv[1] == NULL){
     fprintf(stderr,"No work load file specified\n");
@@ -49,12 +54,12 @@ int main(int argc, char* argv[]){
   m_questions = atoi(line);
 
   questions_hash = question_init(m_questions);
-  int i = m_questions;
+  i = m_questions;
 
   /* Insert questions */
   while(i > 0) {
     get_line(NULL);
-    char * token = strtok(line, ":");
+    token = strtok(line, ":");
     question_insert(&questions_hash, token, m_questions, strtok(NULL, ":"));
     i--;
   }
@@ -64,20 +69,17 @@ int main(int argc, char* argv[]){
 
   while(k_queries > 0 ) {
     get_line(NULL);
-    char * tmp_str = malloc(strlen(line) +1);
+    tmp_str = (char *) malloc(strlen(line) +1);
     strcpy(tmp_str, line);
-    char * token = strtok(tmp_str, " ");
+    token = strtok(tmp_str, " ");
 
-    //line += strlen(tmp_str) +1;
     parser_get_sub_topics_list(&list, ontology, token);
     line+=strlen(token) +1;
 
-    struct sub_topics_list * tmp_list;
     tmp_list = list;
-    int score = 0;
 
+    score = 0;
     while (tmp_list->topic_parent) {
-      // search for provided string accross multiple topics.
       score += question_count(&questions_hash, m_questions, line, tmp_list->topic);
       tmp_list = tmp_list->topic_parent;
     }
@@ -87,14 +89,6 @@ int main(int argc, char* argv[]){
     free(tmp_str);
     k_queries--;
   }
-
-  struct timespec tstart={0,0}, tend={0,0};
-  clock_gettime(CLOCK_MONOTONIC, &tstart);
-
-  clock_gettime(CLOCK_MONOTONIC, &tend);
-  printf("some_long_computation took about %.5f seconds\n",
-         ((double)tend.tv_sec + 1.0e-9*tend.tv_nsec) -
-         ((double)tstart.tv_sec + 1.0e-9*tstart.tv_nsec));
 
   free(line);
   parser_destroy(&list);

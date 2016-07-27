@@ -5,7 +5,7 @@
 #include <string.h>
 #include "parser.h"
 
-struct sub_topics_list * parser_init() {
+struct sub_topics_list * parser_init(void) {
   struct sub_topics_list * list_index = (struct sub_topics_list *) malloc(sizeof(struct sub_topics_list));
   memset((void *) list_index, 0, sizeof(struct sub_topics_list));
   return list_index;

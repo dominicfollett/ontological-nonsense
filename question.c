@@ -9,7 +9,7 @@ void question_destroy(struct question *** questions_hash, int m_questions) {
   m_questions--;
   dawg_cleanup();
   while(m_questions >= 0 ){
-    // free the dawg
+    /* free the dawg */
     struct question * q_tmp = qh[m_questions];
     if (q_tmp) {
       recursive_free(&q_tmp);

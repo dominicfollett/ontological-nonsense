@@ -7,7 +7,6 @@
  struct question {
    struct question * child;
    char * topic;
-   // This needs to be the dawg -- dynamically sized array
    struct dawg ** dawg_array;
  };
 

@@ -11,7 +11,7 @@ struct sub_topics_list {
 /*
  * Initialises and returns the topic ontology linked list
  */
-struct sub_topics_list * parser_init();
+struct sub_topics_list * parser_init(void);
 
 /*
  * Simple helper for copying strings.
