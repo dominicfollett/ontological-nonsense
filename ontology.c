@@ -37,9 +37,7 @@ int main(int argc, char* argv[]){
   char * token;
   char * tmp_str;
 
-  printf("%i == \n", argc);
-
-  if (argv[1] == NULL){
+  if (argv[argc - 1] == NULL){
     fprintf(stderr,"No work load file specified\n");
     exit(EXIT_FAILURE);
   }
