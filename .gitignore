@@ -1,2 +1,4 @@
 *.o
 ontology_main
+gmon.out
+*.txt

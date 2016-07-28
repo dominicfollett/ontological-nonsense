@@ -8,6 +8,7 @@ static char * alphabet[51];
 struct dawg * dawg_init(void) {
   struct dawg * dg = (struct dawg *) malloc(sizeof(struct dawg));
   memset(dg, 0, sizeof(struct dawg));
+  dg->count = 1;
   return dg;
 }
 
@@ -19,7 +20,7 @@ struct dawg ** dawg_init_array(void) {
 
 void chop_letter(char ** word, char * c){
   *c = ' ';
-  while((*c == ' ') || (*c == '\n')) {
+  while((*c == ' ') || (*c == '\n') || (*c == '?')) {
     *c = *word[0];
     (*word)++;
   }
@@ -36,7 +37,7 @@ int dawg_fetch(struct dawg ** good_dawg, char * query) {
     if ((strcmp(good_dawg[i]->letter,c) == 0) && (strcmp(query, "\n") != 0)) {
       return dawg_fetch(good_dawg[i]->pups, query);
     }else if ((strcmp(good_dawg[i]->letter,c) == 0) && (strcmp(query, "\n") == 0)){
-      return 1;
+      return good_dawg[i]->count;
     }
     i++;
   }
@@ -44,10 +45,8 @@ int dawg_fetch(struct dawg ** good_dawg, char * query) {
 }
 
 struct dawg ** dawg_bury(struct dawg ** dawg_array, char * question) {
-  struct dawg ** dg;
   int resize = 2;
   int i = 0;
-  int j = 0;
   char c[] = "\0";
 
   chop_letter(&question, c);
@@ -58,6 +57,7 @@ struct dawg ** dawg_bury(struct dawg ** dawg_array, char * question) {
 
   while(1){
     if((dawg_array[i]) && (strcmp(dawg_array[i]->letter,c) == 0) ){
+      dawg_array[i]->count++;
       dawg_array[i]->pups = dawg_bury(dawg_array[i]->pups, question);
       return dawg_array;
     }else{

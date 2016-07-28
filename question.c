@@ -69,9 +69,11 @@ int question_count(struct question *** questions_hash, int m_questions, char * q
 
 void question_insert(struct question *** questions_hash, char * token, int m_questions, char * line) {
   struct question ** qh = *questions_hash;
+  struct question ** q_tmp;
+  int i;
 
-  int i = (int) hash(token, m_questions--);
-  struct question ** q_tmp = &qh[i];
+  i = (int) hash(token, m_questions--);
+  q_tmp = &qh[i];
 
   while(1) {
     if(*q_tmp) {

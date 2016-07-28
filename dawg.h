@@ -5,6 +5,7 @@
 struct dawg {
   char * letter;
   struct dawg ** pups;
+  int count;
 };
 
 /*

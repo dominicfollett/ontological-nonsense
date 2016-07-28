@@ -82,7 +82,7 @@ int main(int argc, char* argv[]){
       tmp_list = tmp_list->topic_parent;
     }
 
-    printf("%s %i\n", token, score);
+    printf("%i\n",score);
     line -= strlen(token) +1;
     free(tmp_str);
     k_queries--;
