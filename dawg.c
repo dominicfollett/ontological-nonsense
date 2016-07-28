@@ -12,81 +12,81 @@ struct dawg * dawg_init(void) {
 }
 
 struct dawg ** dawg_init_array(void) {
-  struct dawg ** da = malloc(sizeof(struct dawg *));
-  memset(da, 0,sizeof(struct dawg *));
+  struct dawg ** da = malloc(2 * sizeof(struct dawg *));
+  memset(da, 0, 2 * sizeof(struct dawg *));
   return da;
 }
 
 void chop_letter(char ** word, char * c){
   *c = ' ';
-  while(*c == ' ') {
+  while((*c == ' ') || (*c == '\n')) {
     *c = *word[0];
     (*word)++;
   }
 }
 
 int dawg_fetch(struct dawg ** good_dawg, char * query) {
+
   int i = 0;
   char c[] = "\0";
 
   chop_letter(&query, c);
 
   while(good_dawg[i] != NULL) {
-    if ((strcmp(good_dawg[i]->letter,c) == 0) && (strcmp(query, "\n") != 0)) { /* and query still has tokens */
+    if ((strcmp(good_dawg[i]->letter,c) == 0) && (strcmp(query, "\n") != 0)) {
       return dawg_fetch(good_dawg[i]->pups, query);
-    }else if ((strcmp(good_dawg[i]->letter,c) == 0) && (strcmp(query, "\n") == 0)){ /* it matches but has no more tokens; */
+    }else if ((strcmp(good_dawg[i]->letter,c) == 0) && (strcmp(query, "\n") == 0)){
       return 1;
     }
-    /* Otherwise search the array for the letter; */
     i++;
   }
-  /* Here we have failed to match completely */
   return 0;
 }
 
 struct dawg ** dawg_bury(struct dawg ** dawg_array, char * question) {
-  /* struct dawg ** dawg_array = *good_dawg; */
   struct dawg ** dg;
-
+  int resize = 2;
   int i = 0;
   int j = 0;
   char c[] = "\0";
 
-  if (strcmp(question, "\n") == 0) {
+  chop_letter(&question, c);
+
+  if (strcmp(c, "\0") == 0){
     return dawg_array;
   }
 
-  chop_letter(&question, c);
-
   while(1){
     if((dawg_array[i]) && (strcmp(dawg_array[i]->letter,c) == 0) ){
-      dawg_bury(dawg_array[i]->pups, question);
+      dawg_array[i]->pups = dawg_bury(dawg_array[i]->pups, question);
       return dawg_array;
     }else{
-      if (!dawg_array[i]) { /* TODO need to check if the char exists as well */
+      if (!dawg_array[i]) {
 
         dawg_array[i] = dawg_init();
         dawg_array[i]->letter = dawg_index(c);
         dawg_array[i]->pups = dawg_init_array();
 
-        if(!(dg = (struct dawg **) malloc( (3+i) * sizeof(struct dawg *)))) {
+        if (i == 0){
+          resize = 3;
+        }
+        if(!(dg = (struct dawg **) malloc( (resize+i) * sizeof(struct dawg *)))) {
           perror("Error: ");
         }
-        memset(dg, 0, (3+i) * sizeof(struct dawg *));
+        memset(dg, 0, (resize+i) * sizeof(struct dawg *));
         j = i;
         while(j >= 0){
           memcpy(&dg[j], &dawg_array[j], sizeof(struct dawg *));
           j--;
         }
+
         dg[i+1] = NULL;
         dg[i]->pups = dawg_bury(dg[i]->pups, question);
-        /* perhaps return the pointer of the newly allocated dawg_array */
         return dg;
       }
       i++;
     }
   }
-  return dawg_array;
 }
 
 void dawg_demolish(struct dawg ** good_dawg) {
