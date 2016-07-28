@@ -71,20 +71,12 @@ struct dawg ** dawg_bury(struct dawg ** dawg_array, char * question) {
           resize = 3;
         }
 
-        if(!(dg = (struct dawg **) malloc( (resize+i) * sizeof(struct dawg *)))) {
+        if(!(dawg_array = (struct dawg **) realloc((void *) dawg_array, (i+resize) * sizeof(struct dawg *)))) {
           perror("Error: ");
         }
-        memset(dg, 0, (resize+i) * sizeof(struct dawg *));
-        j = i;
-        while(j >= 0){
-          memcpy(&dg[j], &dawg_array[j], sizeof(struct dawg *));
-          j--;
-        }
-
-        dg[i+1] = NULL;
-        dg[i]->pups = dawg_bury(dg[i]->pups, question);
-        free(dawg_array);
-        return dg;
+        memset(dawg_array + i + 1, 0, sizeof(struct dawg *));
+        dawg_array[i]->pups = dawg_bury(dawg_array[i]->pups, question);
+        return dawg_array;
       }
       i++;
     }
