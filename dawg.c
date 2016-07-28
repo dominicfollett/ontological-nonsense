@@ -12,8 +12,8 @@ struct dawg * dawg_init(void) {
 }
 
 struct dawg ** dawg_init_array(void) {
-  struct dawg ** da = malloc(2 * sizeof(struct dawg *));
-  memset(da, 0, 2 * sizeof(struct dawg *));
+  struct dawg ** da = malloc(sizeof(struct dawg *));
+  memset(da, 0, sizeof(struct dawg *));
   return da;
 }
 
@@ -70,6 +70,7 @@ struct dawg ** dawg_bury(struct dawg ** dawg_array, char * question) {
         if (i == 0){
           resize = 3;
         }
+
         if(!(dg = (struct dawg **) malloc( (resize+i) * sizeof(struct dawg *)))) {
           perror("Error: ");
         }
@@ -82,6 +83,7 @@ struct dawg ** dawg_bury(struct dawg ** dawg_array, char * question) {
 
         dg[i+1] = NULL;
         dg[i]->pups = dawg_bury(dg[i]->pups, question);
+        free(dawg_array);
         return dg;
       }
       i++;
