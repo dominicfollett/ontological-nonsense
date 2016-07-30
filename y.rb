@@ -5,7 +5,7 @@ def generate_tree(result)
 
   topics.each do |i|
 
-    open_braces = (rand(2) == 0)
+    open_braces = (rand(20) == 10)
     close_braces = (rand(2) == 0)
 
     if (open_braces and topics.length > 1)
@@ -14,9 +14,6 @@ def generate_tree(result)
       num_open+=1
       result = generate_tree([topic_tree, topics, num_open])
       topics = result[1]
-      puts "----"
-      puts topics
-      puts "----"
       topic_tree = result[0]
       num_open = result[2]
       next
@@ -35,17 +32,17 @@ end
 
 
 # 100000
-topic_count = 10
+topic_count = 100
 topics = []
 
 topic_count.times {|i|
-  limit = rand(5)
+  limit = rand(10)
   topic = ('A'..'Z').to_a.shuffle[0,limit].join
   topics.push(topic)
 }
 
 topics.uniq!
-topics = topics[0...4]
+topics = topics[0...100]
 
 topics.select!{|t| t.length > 0}
 
