@@ -8,7 +8,6 @@ void question_destroy(struct question *** questions_hash, int m_questions) {
   struct question ** qh = *questions_hash;
   m_questions--;
   while(m_questions >= 0 ){
-    /* free the dawg */
     struct question * q_tmp = qh[m_questions];
     if (q_tmp) {
       recursive_free(&q_tmp);
@@ -28,28 +27,29 @@ void recursive_free(struct question ** q_tmp) {
   free(*q_tmp);
 }
 
-static unsigned long hash(char *str, unsigned long modulo)
-{
-    unsigned long hash = 5381;
-    int c;
+static unsigned long hash(char *str, unsigned long modulo) {
+  unsigned long hash = 5381;
+  int c;
 
-    while ((c = *str++))
-        hash = ((hash << 5) + hash) + c; /* hash * 33 + c */
+  while ((c = *str++))
+    hash = ((hash << 5) + hash) + c; /* hash * 33 + c */
 
-    return hash % modulo;
+  return hash % modulo;
 }
 
 struct question ** question_init(int m_questions) {
-  struct question ** questions_hash =  malloc(m_questions * sizeof(struct question *));
+  struct question ** questions_hash;
+  questions_hash = malloc(m_questions * sizeof(struct question *));
   memset((void *) questions_hash, 0, m_questions * sizeof(struct question *));
   return questions_hash;
 }
 
 int question_count(struct question *** questions_hash, int m_questions, char * query, char * topic) {
-  struct question ** qh = *questions_hash;
+  struct question ** q_tmp;
+  int i;
 
-  int i = (int) hash(topic, m_questions--);
-  struct question ** q_tmp = &qh[i];
+  i = (int) hash(topic, m_questions--);
+  q_tmp = &(*questions_hash)[i];
 
   while(1) {
     if(*q_tmp) {
@@ -66,12 +66,11 @@ int question_count(struct question *** questions_hash, int m_questions, char * q
 }
 
 void question_insert(struct question *** questions_hash, char * token, int m_questions, char * line) {
-  struct question ** qh = *questions_hash;
   struct question ** q_tmp;
   int i;
 
   i = (int) hash(token, m_questions--);
-  q_tmp = &qh[i];
+  q_tmp = &(*questions_hash)[i];
 
   while(1) {
     if(*q_tmp) {
