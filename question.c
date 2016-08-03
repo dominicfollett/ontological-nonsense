@@ -11,7 +11,7 @@ void question_destroy(struct question *** questions_hash, int m_questions) {
     struct question * q_tmp = qh[m_questions];
     if (q_tmp) {
       recursive_free(&q_tmp);
-    }
+    } /* If not NULL */
     m_questions--;
   }
   free(qh);
@@ -53,7 +53,7 @@ int question_count(struct question *** questions_hash, int m_questions, char * q
 
   while(1) {
     if(*q_tmp) {
-      if (strcmp((*q_tmp)->topic, topic) == 0){
+      if (0 == strcmp((*q_tmp)->topic, topic)){
         return dawg_fetch((*q_tmp)->dawg_array, query);
       }else{
         q_tmp = &((*q_tmp)->child);
@@ -74,7 +74,7 @@ void question_insert(struct question *** questions_hash, char * token, int m_que
 
   while(1) {
     if(*q_tmp) {
-      if (strcmp((*q_tmp)->topic, token) == 0){
+      if (0 == strcmp((*q_tmp)->topic, token)){
         (*q_tmp)->dawg_array = dawg_bury((*q_tmp)->dawg_array, line);
         break;
       }else{

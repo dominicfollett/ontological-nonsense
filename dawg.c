@@ -28,7 +28,7 @@ int peeks(char **word){
   int delta;
   delta = 0;
 
-  while((*c == ' ') || (*c == '\n') || (*c == '?')) {
+  while((' ' == *c) || ('\n' == *c) || ('?' == *c)) {
     *c = *word[0];
     (*word)++;
     delta++;
@@ -42,7 +42,7 @@ int peeks(char **word){
 
 void chop_letter(char ** word, char * c){
   *c = ' ';
-  while((*c == ' ') || (*c == '\n') || (*c == '?')) {
+  while((' ' == *c) || ('\n' == *c) || ('?' == *c)) {
     *c = *word[0];
     (*word)++;
   }
@@ -57,9 +57,9 @@ int dawg_fetch(struct dawg ** good_dawg, char * query) {
   no_more_letters = peeks(&query);
 
   while(good_dawg[i] != NULL) {
-    if ((strcmp(good_dawg[i]->letter,c) == 0) && !no_more_letters ) {
+    if (0 == (strcmp(good_dawg[i]->letter,c)) && !no_more_letters ) {
       return dawg_fetch(good_dawg[i]->pups, query);
-    }else if ((strcmp(good_dawg[i]->letter,c) == 0) && no_more_letters ){
+    }else if (0 == (strcmp(good_dawg[i]->letter,c)) && no_more_letters ){
       return good_dawg[i]->count;
     }
     i++;
@@ -68,19 +68,19 @@ int dawg_fetch(struct dawg ** good_dawg, char * query) {
 }
 
 struct dawg ** dawg_bury(struct dawg ** dawg_array, char * question) {
-  int resize, i;
+  int i;
 
   char c[] = "\0";
-  resize = 2;
+
   i = 0;
   chop_letter(&question, c);
 
-  if (strcmp(c, "\0") == 0) {
+  if (0 == strcmp(c, "\0")) {
     return dawg_array;
   }
 
   while(1){
-    if((dawg_array[i]) && (strcmp(dawg_array[i]->letter,c) == 0)){
+    if((dawg_array[i]) && (0 == strcmp(dawg_array[i]->letter,c)) ){
       dawg_array[i]->count++;
       dawg_array[i]->pups = dawg_bury(dawg_array[i]->pups, question);
       return dawg_array;
@@ -91,12 +91,12 @@ struct dawg ** dawg_bury(struct dawg ** dawg_array, char * question) {
         dawg_array[i]->letter = dawg_index(c);
         dawg_array[i]->pups = dawg_init_array();
 
-        if (i == 0){
-          resize = 3;
-        }
+        /* Resize the array */
+        dawg_array = realloc(dawg_array, (i+3) * sizeof(struct dawg *));
 
-        if(!(dawg_array = (struct dawg **) realloc((void *) dawg_array, (i+resize) * sizeof(struct dawg *)))) {
+        if(!dawg_array) {
           perror("Error: ");
+          exit(-1);
         }
 
         memset(dawg_array + i + 1, 0, sizeof(struct dawg *));
