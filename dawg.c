@@ -3,7 +3,12 @@
 #include <string.h>
 #include "dawg.h"
 
-static char * alphabet[51];
+static char * alphabet[] = {"A", "B", "C", "D", "E", "F", "G", "H", "I", "J",\
+                            "K", "L", "M", "N", "O", "P", "Q", "R", "S", "T",\
+                            "U", "V", "W", "X", "Y", "Z", "a", "b", "c", "d",\
+                            "e", "f", "g", "h", "i", "j", "k", "l", "m", "n",\
+                            "o", "p", "q", "r", "s", "t", "u", "v", "w", "x",\
+                            "y", "z"};
 
 struct dawg * dawg_init(void) {
   struct dawg * dg = (struct dawg *) malloc(sizeof(struct dawg));
@@ -21,7 +26,6 @@ struct dawg ** dawg_init_array(void) {
 int peeks(char **word){
   char c[] = " \0";
   int delta;
-
   delta = 0;
 
   while((*c == ' ') || (*c == '\n') || (*c == '?')) {
@@ -29,13 +33,11 @@ int peeks(char **word){
     (*word)++;
     delta++;
   }
-
   if(*c == '\0'){
     return 1;
-  }else{
-    (*word) -= delta;
-    return 0;
   }
+  *word -= delta;
+  return 0;
 }
 
 void chop_letter(char ** word, char * c){
@@ -47,12 +49,11 @@ void chop_letter(char ** word, char * c){
 }
 
 int dawg_fetch(struct dawg ** good_dawg, char * query) {
-
-  int i = 0;
+  int i, no_more_letters;
   char c[] = "\0";
-  int no_more_letters;
-  chop_letter(&query, c);
 
+  i = 0;
+  chop_letter(&query, c);
   no_more_letters = peeks(&query);
 
   while(good_dawg[i] != NULL) {
@@ -63,23 +64,23 @@ int dawg_fetch(struct dawg ** good_dawg, char * query) {
     }
     i++;
   }
-
   return 0;
 }
 
 struct dawg ** dawg_bury(struct dawg ** dawg_array, char * question) {
-  int resize = 2;
-  int i = 0;
-  char c[] = "\0";
+  int resize, i;
 
+  char c[] = "\0";
+  resize = 2;
+  i = 0;
   chop_letter(&question, c);
 
-  if (strcmp(c, "\0") == 0){
+  if (strcmp(c, "\0") == 0) {
     return dawg_array;
   }
 
   while(1){
-    if((dawg_array[i]) && (strcmp(dawg_array[i]->letter,c) == 0) ){
+    if((dawg_array[i]) && (strcmp(dawg_array[i]->letter,c) == 0)){
       dawg_array[i]->count++;
       dawg_array[i]->pups = dawg_bury(dawg_array[i]->pups, question);
       return dawg_array;
@@ -117,181 +118,111 @@ void dawg_demolish(struct dawg ** good_dawg) {
     return;
 }
 
-void dawg_cleanup(void) {
-  int i = 50;
-  while(i >=0 ) {
-    if(alphabet[i]) {
-      free(alphabet[i]);
-    }
-    i--;
-  }
-}
-
-void alpha_check(int i, const char * c) {
-  if (!alphabet[i]){
-    alphabet[i] = malloc(2*sizeof(char));
-    memset(alphabet[i], 0, sizeof(char));
-    strcpy(alphabet[i], c);
-  }
-}
-
 char * dawg_index(char * letter) {
   switch (*letter) {
     case 'A' :
-      alpha_check(0,"A");
       return alphabet[0];
     case 'B' :
-      alpha_check(1,"B");
       return alphabet[1];
     case 'C' :
-      alpha_check(2,"C");
       return alphabet[2];
     case 'D' :
-      alpha_check(3,"D");
       return alphabet[3];
     case 'E' :
-      alpha_check(4,"E");
       return alphabet[4];
     case 'F' :
-      alpha_check(5,"F");
       return alphabet[5];
     case 'G' :
-      alpha_check(6,"G");
       return alphabet[6];
     case 'H' :
-      alpha_check(7,"H");
       return alphabet[7];
     case 'I' :
-      alpha_check(8,"I");
       return alphabet[8];
     case 'J' :
-      alpha_check(9,"J");
       return alphabet[9];
     case 'K' :
-      alpha_check(10,"K");
       return alphabet[10];
     case 'L' :
-      alpha_check(11,"L");
       return alphabet[11];
     case 'M' :
-      alpha_check(12,"M");
       return alphabet[12];
     case 'N' :
-      alpha_check(13,"N");
       return alphabet[13];
     case 'O' :
-      alpha_check(14,"O");
       return alphabet[14];
     case 'P' :
-      alpha_check(15,"P");
       return alphabet[15];
     case 'Q' :
-      alpha_check(16,"Q");
       return alphabet[16];
     case 'R' :
-      alpha_check(17,"R");
       return alphabet[17];
     case 'S' :
-      alpha_check(18,"S");
       return alphabet[18];
     case 'T' :
-      alpha_check(19,"T");
       return alphabet[19];
     case 'U' :
-      alpha_check(20,"U");
       return alphabet[20];
     case 'V' :
-      alpha_check(21,"V");
       return alphabet[21];
     case 'W' :
-      alpha_check(22,"W");
       return alphabet[22];
     case 'X' :
-      alpha_check(23,"X");
       return alphabet[23];
     case 'Y' :
-      alpha_check(24,"Y");
       return alphabet[24];
     case 'Z' :
-      alpha_check(25,"Z");
       return alphabet[25];
     case 'a' :
-      alpha_check(26,"a");
       return alphabet[26];
     case 'b' :
-      alpha_check(27,"b");
       return alphabet[27];
     case 'c' :
-      alpha_check(28,"c");
       return alphabet[28];
     case 'd' :
-      alpha_check(29,"d");
       return alphabet[29];
     case 'e' :
-      alpha_check(30,"e");
       return alphabet[30];
     case 'f' :
-      alpha_check(31,"f");
       return alphabet[31];
     case 'g' :
-      alpha_check(32,"g");
       return alphabet[32];
     case 'h' :
-      alpha_check(33,"h");
       return alphabet[33];
     case 'i' :
-      alpha_check(34,"i");
       return alphabet[34];
     case 'j' :
-      alpha_check(35,"j");
       return alphabet[35];
     case 'k' :
-      alpha_check(36,"k");
       return alphabet[36];
     case 'l' :
-      alpha_check(37,"l");
       return alphabet[37];
     case 'm' :
-      alpha_check(38,"m");
       return alphabet[38];
     case 'n' :
-      alpha_check(39,"n");
       return alphabet[39];
     case 'o' :
-      alpha_check(40,"o");
       return alphabet[40];
     case 'p' :
-      alpha_check(41,"p");
       return alphabet[41];
     case 'q' :
-      alpha_check(42,"q");
       return alphabet[42];
     case 'r' :
-      alpha_check(43,"r");
       return alphabet[43];
     case 's' :
-      alpha_check(44,"s");
       return alphabet[44];
     case 't' :
-      alpha_check(45,"t");
       return alphabet[45];
     case 'u' :
-      alpha_check(46,"u");
       return alphabet[46];
     case 'v' :
-      alpha_check(47,"v");
       return alphabet[47];
     case 'w' :
-      alpha_check(48,"w");
       return alphabet[48];
     case 'x' :
-      alpha_check(49,"x");
       return alphabet[49];
     case 'y' :
-      alpha_check(50,"y");
       return alphabet[50];
     case 'z' :
-      alpha_check(51,"z");
       return alphabet[51];
     default :
       return NULL;

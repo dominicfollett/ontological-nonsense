@@ -13,13 +13,20 @@ struct dawg {
  */
 struct dawg * dawg_init(void);
 
-void init_alphabet(void);
+/*
+ * Check if we're at the end of the string
+ */
+int peeks(char **word);
 
+/*
+ * Initialize an array of dawg with one item
+ */
 struct dawg ** dawg_init_array(void);
 
+/*
+ * Remove a letter from the question or query
+ */
 void chop_letter(char ** word, char * c);
-
-void alpha_check(int i, const char * c);
 
 /*
  * Insert string elements into dawg.
@@ -35,8 +42,6 @@ int dawg_fetch(struct dawg ** good_dawg, char * query);
  * Free all memory associated with this dawg.
  */
 void dawg_demolish(struct dawg ** good_dawg);
-
-void dawg_cleanup(void);
 
 /*
  * Returns a pointer to the memory allocated letter
