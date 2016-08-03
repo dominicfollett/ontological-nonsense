@@ -18,6 +18,26 @@ struct dawg ** dawg_init_array(void) {
   return da;
 }
 
+int peeks(char **word){
+  char c[] = " \0";
+  int delta;
+
+  delta = 0;
+
+  while((*c == ' ') || (*c == '\n') || (*c == '?')) {
+    *c = *word[0];
+    (*word)++;
+    delta++;
+  }
+
+  if(*c == '\0'){
+    return 1;
+  }else{
+    (*word) -= delta;
+    return 0;
+  }
+}
+
 void chop_letter(char ** word, char * c){
   *c = ' ';
   while((*c == ' ') || (*c == '\n') || (*c == '?')) {
@@ -30,17 +50,20 @@ int dawg_fetch(struct dawg ** good_dawg, char * query) {
 
   int i = 0;
   char c[] = "\0";
-
+  int no_more_letters;
   chop_letter(&query, c);
 
+  no_more_letters = peeks(&query);
+
   while(good_dawg[i] != NULL) {
-    if ((strcmp(good_dawg[i]->letter,c) == 0) && (strcmp(query, "\n") != 0)) {
+    if ((strcmp(good_dawg[i]->letter,c) == 0) && !no_more_letters ) {
       return dawg_fetch(good_dawg[i]->pups, query);
-    }else if ((strcmp(good_dawg[i]->letter,c) == 0) && (strcmp(query, "\n") == 0)){
+    }else if ((strcmp(good_dawg[i]->letter,c) == 0) && no_more_letters ){
       return good_dawg[i]->count;
     }
     i++;
   }
+
   return 0;
 }
 
