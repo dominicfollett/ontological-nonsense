@@ -1,5 +1,5 @@
 CC     = gcc
-CFLAGS = -Wall -g -Wextra -std=c89 -pedantic -Wmissing-prototypes -Wstrict-prototypes -Wold-style-definition -pg
+CFLAGS = -Wall -g -Wextra -std=c89 -pedantic -Wmissing-prototypes -Wstrict-prototypes -Wold-style-definition
 
 LIBS = -lpthread
 
