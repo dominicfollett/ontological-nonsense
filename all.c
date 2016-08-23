@@ -94,14 +94,13 @@ static void add_to_list(struct sub_topics_list **list_index, char *token)
 void parser_get_sub_topics_list(struct sub_topics_list **list_index,
 								char *topics, char *topic)
 {
+	clean_list(list_index);
 	char *subtree;
 	if ((subtree = strstr(topics, topic)) != NULL)
 	{
 		char *token;
 		char *buffer = NULL;
 		int p_to_close = 0;
-
-		clean_list(list_index);
 
 		copy_string(subtree, &buffer);
 		if ((token = strtok(buffer, " ")) != NULL)
@@ -601,7 +600,7 @@ int get_line(char *workload_path)
 
 	if(!workload_path && !file_handle)
 	{
-		getdelim(&line, &len, '\n',stdin);
+		getline(&line, &len, stdin);
 		return 0;
 	}
 
@@ -641,11 +640,6 @@ int main(int argc, char *argv[])
 	char *token;
 	char *tmp_str;
 
-	if (1 == argc)
-	{
-
-	}
-
 	list = parser_init();
 	get_line(argv[1]);
 
@@ -663,8 +657,13 @@ int main(int argc, char *argv[])
 	{
 		get_line(NULL);
 		token = strtok(line, ":");
-		question_insert(&questions_hash, token, m_questions,
-						strtok(NULL, ":"));
+		tmp_str = strtok(NULL, ":");
+		if (question_count(&questions_hash, m_questions, tmp_str,
+                 token) == 0)
+				{
+    			question_insert(&questions_hash, token, m_questions,
+          				tmp_str);
+				}
 		i--;
 	}
 

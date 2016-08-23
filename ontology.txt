@@ -1,13 +1,20 @@
 6
-Animals ( Reptiles Birds ( Eagles Pigeons Crows ) )
-5
+Animals ( Reptiles Birds ( Birds ( Weavels ) Eagles Pigeons Crows ) )
+8
 Reptiles: Why are many reptiles green?
+Animals: How do birds fly?
 Birds: How do birds fly?
+Birds: How do birds fly?
+Birds: How do birds Fly?
 Eagles: How endangered are eagles?
 Pigeons: Where in the world are pigeons most densely populated?
 Eagles: Where do most eagles live?
-4
+7
 Eagles How en
 Birds Where
 Reptiles Why do
 Animals Wh
+Animals How do birds fly
+Birds How do
+birds How do birds fly?
+# perhaps the lowercase birds is OK as it is topic name not query text
