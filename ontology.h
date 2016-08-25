@@ -10,7 +10,7 @@ typedef struct ontology_node * ontology_n;
 struct ontology_s *  ontology_init(char * flat_ontology, int N);
 
 /*
- * Find cycle through a topic subtree.
+ * Find and cycle through a topic subtree.
  * If topic is NULL. then cycle through children.
  * If this function returns NULL, then there are no more children.
  * Do not pass NULL on 1st iteration.
