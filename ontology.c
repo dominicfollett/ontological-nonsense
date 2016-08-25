@@ -80,7 +80,7 @@ int main(int argc, char *argv[])
 	while (k_queries > 0)
 	{
 		get_line(NULL);
-		tmp_str = (char *)malloc(strlen(line) + 1);
+		tmp_str = malloc(strlen(line) + 1);
 		strcpy(tmp_str, line);
 		token = strtok(tmp_str, " ");
 

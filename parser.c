@@ -7,8 +7,7 @@
 
 struct sub_topics_list *parser_init(void)
 {
-	struct sub_topics_list *list_index =
-		(struct sub_topics_list *)malloc(sizeof(struct sub_topics_list));
+	struct sub_topics_list *list_index = malloc(sizeof(struct sub_topics_list));
 	memset((void *)list_index, 0, sizeof(struct sub_topics_list));
 	return list_index;
 }
@@ -37,9 +36,8 @@ void parser_destroy(struct sub_topics_list **list_index)
 
 static void add_to_list(struct sub_topics_list **list_index, char *token)
 {
-	struct sub_topics_list *item =
-		(struct sub_topics_list *)malloc(sizeof(struct sub_topics_list));
-	item->topic = (char *)malloc(strlen(token) + 1);
+	struct sub_topics_list *item = malloc(sizeof(struct sub_topics_list));
+	item->topic = malloc(strlen(token) + 1);
 	strcpy(item->topic, token);
 	item->topic_child = NULL;
 	item->topic_parent = *list_index;
@@ -50,7 +48,7 @@ static void add_to_list(struct sub_topics_list **list_index, char *token)
 void copy_string(char *src, char **dest)
 {
 	size_t length = strlen(src);
-	*dest = (char *)malloc(length + 1);
+	*dest = malloc(length + 1);
 	if (!*dest)
 	{
 		perror("During malloc:");

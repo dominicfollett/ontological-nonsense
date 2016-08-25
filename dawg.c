@@ -13,7 +13,7 @@ static char *alphabet[] = { "A", "B", "C", "D", "E", "F", "G", "H", "I", "J",
 
 struct dawg *dawg_init(void)
 {
-	struct dawg *dg = (struct dawg *)malloc(sizeof(struct dawg));
+	struct dawg *dg = malloc(sizeof(struct dawg));
 	memset(dg, 0, sizeof(struct dawg));
 	dg->count = 1;
 	return dg;

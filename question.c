@@ -106,7 +106,7 @@ void question_insert(struct question ***questions_hash, char *token,
 		}
 		else
 		{
-			*q_tmp = (struct question *)malloc(sizeof(struct question));
+			*q_tmp = malloc(sizeof(struct question));
 			memset((void *)*q_tmp, 0, sizeof(struct question));
 			copy_string(token, &((*q_tmp)->topic));
 			(*q_tmp)->dawg_array = dawg_init_array();
