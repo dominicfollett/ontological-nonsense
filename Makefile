@@ -15,7 +15,10 @@ parser.o: parser.c
 ontology.o: ontology.c
 	$(CC) -c $^ $(CFLAGS)
 
-ontology_main: parser.o ontology.o dawg.o question.o
+main.o: main.c
+	$(CC) -c $^ $(CFLAGS)
+
+main: main.o parser.o ontology.o dawg.o question.o
 	$(CC) -o $@ $(CFLAGS) $^ $(LIBS)
 
 #### Cleanup ####
