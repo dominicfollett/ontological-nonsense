@@ -10,6 +10,11 @@ typedef struct ontology_node * ontology_n;
 struct ontology_s *  ontology_init(char * flat_ontology, int N);
 
 /*
+ * Initializes a node of the ontology tree.
+ */
+struct ontology_node * node_init(void);
+
+/*
  * Find and cycle through a topic subtree.
  * If topic is NULL. then cycle through children.
  * If this function returns NULL, then there are no more children.

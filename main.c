@@ -5,6 +5,7 @@
 #include <string.h>
 #include "parser.h"
 #include "question.h"
+#include "ontology.h"
 
 /* Prototype declaration */
 int get_line(char *workload_path);
@@ -103,6 +104,8 @@ int main(int argc, char *argv[])
 		free(tmp_str);
 		k_queries--;
 	}
+
+	ontology_init(ontology, 7);
 
 	free(line);
 	parser_destroy(&list);

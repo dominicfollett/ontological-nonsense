@@ -29,34 +29,57 @@ struct ontology_s
 struct ontology_node
 {
   char * topic;
-  struct ontology_node ** children;
+  struct ontology_node * child; /* A linked list of child nodes */
+  struct ontology_node * sibling;
   void * data; /* Data that someone wants to store in refence to this topic */
 };
+
+static void copy_string(char **dest, char *src)
+{
+	size_t length = strlen(src);
+	*dest = malloc(length + 1);
+	if (!*dest)
+	{
+		perror("During malloc:");
+	}
+	memcpy(*dest, src, length + 1);
+}
+
+struct ontology_node * node_init() {
+  struct ontology_node * new_node;
+  new_node = malloc(sizeof(struct ontology_node));
+  memset(new_node, 0, sizeof(struct ontology_node));
+  return new_node;
+}
 
 /*
  * strtok_r is no reentrant so I can use it accross recursive calls
  */
 
-static void parse_flat_tree(struct ontology_node * on, char * flat_ontology, char * save_ptr, int * p_to_close)
+static void parse_flat_tree(struct ontology_node ** on, char * flat_ontology,
+           char **save_ptr, int * p_to_close )
 {
   char *token;
+  struct ontology_node *last_created;
 
-  if(flat_ontology)
+  if(!*on)
   {
-    if ((token = strtok_r(flat_ontology, " ", &save_ptr)) != NULL)
+    *on = node_init();
+    if ((token = strtok_r(flat_ontology, " ", save_ptr)) != NULL)
     {
-      strcpy(on->topic, token);
+      copy_string(&((*on)->topic), token);
     }
   }
 
-  while ((token = strtok_r(NULL, " ", &save_ptr)) != NULL)
+  last_created = *on;
+
+  while ((token = strtok_r(NULL, " ", save_ptr)) != NULL)
   {
     switch (*token)
     {
     case '(':
       *p_to_close += 1;
-      /* Get the most recently created child */
-      /* parse_flat_tree(child_node, NULL, save_ptr, &p_to_close) */
+      parse_flat_tree(&last_created, NULL, save_ptr, p_to_close);
       break;
     case ')':
       *p_to_close -= 1;
@@ -66,8 +89,14 @@ static void parse_flat_tree(struct ontology_node * on, char * flat_ontology, cha
       if (*p_to_close > 0)
       {
         /* Create a new node */
-        /* Set the topic */
-        /* Add it on's children */
+        last_created = node_init();
+        copy_string(&(last_created->topic), token);
+        /* Add it onto on's children */
+        if((*on)->child)
+        {
+          last_created->sibling = (*on)->child;
+        }/* else last created sibling is null */
+        (*on)->child = last_created;
       }
     }
     if (*p_to_close == 0)
@@ -80,6 +109,9 @@ static void parse_flat_tree(struct ontology_node * on, char * flat_ontology, cha
 
 struct ontology_s *  ontology_init(char * flat_ontology, int N)
 {
+  char * save_ptr;
+  int p_to_close;
+  struct ontology_node *on;
   /* Malloc the ontology_s struct */
     /* Initialize the Root and Current nodes and the Hash Map */
     /* While */
@@ -87,10 +119,10 @@ struct ontology_s *  ontology_init(char * flat_ontology, int N)
       /* Create a node */
       /* recursively create children */
       /* resize children array based OR get the size as part of the recursive process */
-    char * save_ptr = NULL;
-    int p_to_close = 0;
-    struct ontology_node * on = malloc(sizeof(struct ontology_node));
-    parse_flat_tree(on, flat_ontology, save_ptr, &p_to_close);
+    save_ptr = NULL;
+    p_to_close = 0;
+
+    parse_flat_tree(&on, flat_ontology, &save_ptr, &p_to_close);
     return NULL;
 }
 
