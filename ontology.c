@@ -3,6 +3,7 @@
 #include <string.h>
 #include "ontology.h"
 #include "hash.h"
+#include <ctype.h>
 /*
  * Searches are expensive. Store a pointer to the node, in a hash map wrt.
  * topic name. Separate out the hashing mechanism in question.c so that it
@@ -112,6 +113,7 @@ struct ontology_s *  ontology_init(char * flat_ontology, int N)
   char * save_ptr;
   int p_to_close;
   struct ontology_node *on;
+  char * save_place;
   /* Malloc the ontology_s struct */
     /* Initialize the Root and Current nodes and the Hash Map */
     /* While */
@@ -121,9 +123,18 @@ struct ontology_s *  ontology_init(char * flat_ontology, int N)
       /* resize children array based OR get the size as part of the recursive process */
     save_ptr = NULL;
     p_to_close = 0;
+    on = NULL;
+    save_place = flat_ontology;
+
+    for ( ; *flat_ontology; ++flat_ontology) *flat_ontology = tolower(*flat_ontology);
+    flat_ontology = save_place;
 
     parse_flat_tree(&on, flat_ontology, &save_ptr, &p_to_close);
     return NULL;
+}
+
+void ontology_cleanup(ontology_t opaque_pointer) {
+  /* recursively free the tree */
 }
 
 struct ontology_node * ontology_find(ontology_t opaque_pointer, char * topic)

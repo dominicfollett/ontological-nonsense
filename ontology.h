@@ -35,3 +35,4 @@ void * ontology_get_data(ontology_t opaque_pointer);
 /*
  * A cleanup method
  */
+void ontology_cleanup(ontology_t opaque_pointer);
