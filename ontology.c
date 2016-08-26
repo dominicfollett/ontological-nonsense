@@ -24,7 +24,7 @@ struct ontology_s
 {
   struct ontology_node * root;
   struct ontology_node * current;
-  hash_map ontology_m;
+  hash_map ontology_map;
 };
 
 struct ontology_node
@@ -54,7 +54,7 @@ struct ontology_node * node_init() {
 }
 
 /*
- * strtok_r is no reentrant so I can use it accross recursive calls
+ * strtok_r is reentrant so I can use it accross recursive calls
  */
 
 static void parse_flat_tree(struct ontology_node ** on, char * flat_ontology,
@@ -64,13 +64,13 @@ static void parse_flat_tree(struct ontology_node ** on, char * flat_ontology,
   struct ontology_node *last_created;
 
   if(!*on)
-  {
+    {
     *on = node_init();
     if ((token = strtok_r(flat_ontology, " ", save_ptr)) != NULL)
-    {
+      {
       copy_string(&((*on)->topic), token);
+      }
     }
-  }
 
   last_created = *on;
 
@@ -111,26 +111,30 @@ static void parse_flat_tree(struct ontology_node ** on, char * flat_ontology,
 struct ontology_s *  ontology_init(char * flat_ontology, int N)
 {
   char * save_ptr;
+  char * save_place;
   int p_to_close;
   struct ontology_node *on;
-  char * save_place;
+  struct ontology_s *ontology_tree;
+
+  save_ptr = NULL;
+  p_to_close = 0;
+  on = NULL;
+  save_place = flat_ontology;
+
   /* Malloc the ontology_s struct */
-    /* Initialize the Root and Current nodes and the Hash Map */
-    /* While */
-      /* Parse the flat tree */
-      /* Create a node */
-      /* recursively create children */
-      /* resize children array based OR get the size as part of the recursive process */
-    save_ptr = NULL;
-    p_to_close = 0;
-    on = NULL;
-    save_place = flat_ontology;
+  ontology_tree = malloc(sizeof(struct ontology_s));
+  memset(ontology_tree, 0, sizeof(struct ontology_s));
+  ontology_tree->ontology_map = hash_init(sizeof(struct ontology_node *), N);
+  /* Initialize the Root and Current nodes and the Hash Map */
 
-    for ( ; *flat_ontology; ++flat_ontology) *flat_ontology = tolower(*flat_ontology);
-    flat_ontology = save_place;
+  for ( ; *flat_ontology; ++flat_ontology) *flat_ontology = tolower(*flat_ontology);
+  flat_ontology = save_place;
 
-    parse_flat_tree(&on, flat_ontology, &save_ptr, &p_to_close);
-    return NULL;
+  parse_flat_tree(&on, flat_ontology, &save_ptr, &p_to_close);
+  ontology_tree->root = on; /* Never changes */
+  ontology_tree->current = on;
+
+  return ontology_tree;
 }
 
 void ontology_cleanup(ontology_t opaque_pointer) {
