@@ -7,12 +7,12 @@ typedef struct ontology_node * ontology_n;
 /*
  * Set up entire DS, return opaque point for further calls.
  */
-struct ontology_s *  ontology_init(char * flat_ontology, int N);
+struct ontology_s *ontology_init(char * flat_ontology, int N);
 
 /*
  * Initializes a node of the ontology tree.
  */
-struct ontology_node * node_init(void);
+struct ontology_node *node_init(char * topic);
 
 /*
  * Find and cycle through a topic subtree.
@@ -20,7 +20,7 @@ struct ontology_node * node_init(void);
  * If this function returns NULL, then there are no more children.
  * Do not pass NULL on 1st iteration.
  */
-struct ontology_node * ontology_find(ontology_t opaque_pointer, char * topic);
+struct ontology_node *ontology_find(ontology_t opaque_pointer, char * topic);
 
 /*
  * Set related data on the current node this can be anything, int, struct ...

@@ -1,9 +1,12 @@
+#define _GNU_SOURCE
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 #include "ontology.h"
 #include "hash.h"
 #include <ctype.h>
+
 /*
  * Searches are expensive. Store a pointer to the node, in a hash map wrt.
  * topic name. Separate out the hashing mechanism in question.c so that it
@@ -46,10 +49,11 @@ static void copy_string(char **dest, char *src)
 	memcpy(*dest, src, length + 1);
 }
 
-struct ontology_node * node_init() {
+struct ontology_node * node_init(char * topic) {
   struct ontology_node * new_node;
   new_node = malloc(sizeof(struct ontology_node));
   memset(new_node, 0, sizeof(struct ontology_node));
+  copy_string(&(new_node->topic), topic);
   return new_node;
 }
 
@@ -58,17 +62,16 @@ struct ontology_node * node_init() {
  */
 
 static void parse_flat_tree(struct ontology_node ** on, char * flat_ontology,
-           char **save_ptr, int * p_to_close )
+           char **save_ptr, int * p_to_close, hash_map map)
 {
   char *token;
   struct ontology_node *last_created;
 
   if(!*on)
     {
-    *on = node_init();
     if ((token = strtok_r(flat_ontology, " ", save_ptr)) != NULL)
       {
-      copy_string(&((*on)->topic), token);
+        *on = node_init(token);
       }
     }
 
@@ -80,7 +83,7 @@ static void parse_flat_tree(struct ontology_node ** on, char * flat_ontology,
     {
     case '(':
       *p_to_close += 1;
-      parse_flat_tree(&last_created, NULL, save_ptr, p_to_close);
+      parse_flat_tree(&last_created, NULL, save_ptr, p_to_close, map);
       break;
     case ')':
       *p_to_close -= 1;
@@ -90,8 +93,8 @@ static void parse_flat_tree(struct ontology_node ** on, char * flat_ontology,
       if (*p_to_close > 0)
       {
         /* Create a new node */
-        last_created = node_init();
-        copy_string(&(last_created->topic), token);
+        last_created = node_init(token);
+        hash_insert(map, (void *) last_created, token);
         /* Add it onto on's children */
         if((*on)->child)
         {
@@ -124,13 +127,13 @@ struct ontology_s *  ontology_init(char * flat_ontology, int N)
   /* Malloc the ontology_s struct */
   ontology_tree = malloc(sizeof(struct ontology_s));
   memset(ontology_tree, 0, sizeof(struct ontology_s));
-  ontology_tree->ontology_map = hash_init(sizeof(struct ontology_node *), N);
+  ontology_tree->ontology_map = hash_init(N);
   /* Initialize the Root and Current nodes and the Hash Map */
 
   for ( ; *flat_ontology; ++flat_ontology) *flat_ontology = tolower(*flat_ontology);
   flat_ontology = save_place;
 
-  parse_flat_tree(&on, flat_ontology, &save_ptr, &p_to_close);
+  parse_flat_tree(&on, flat_ontology, &save_ptr, &p_to_close, ontology_tree->ontology_map);
   ontology_tree->root = on; /* Never changes */
   ontology_tree->current = on;
 
